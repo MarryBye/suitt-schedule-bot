@@ -1,15 +1,33 @@
 import asyncio
+import logging
+import sys
 
-from schedulebot.schedulebot import ScheduleBot
 from schedulebot.config import BOT_TOKEN
-
-from schedulebot.routers.main_router import router as main_router
-from schedulebot.routers.commands_router import router as commands_router
+from schedulebot.keyboards.show_schedule import KEYBOARD  # noqa: F401
 from schedulebot.routers.ai_router import router as ai_router
+from schedulebot.routers.commands_router import router as commands_router
+from schedulebot.routers.main_router import router as main_router
+from schedulebot.schedulebot import ScheduleBot
 
-from schedulebot.keyboards.show_schedule import KEYBOARD
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+
+def main() -> None:
+    if not BOT_TOKEN or BOT_TOKEN == "your_telegram_bot_token":
+        logger.error(
+            "BOT_TOKEN is not set or using placeholder. "
+            "Please configure BOT_TOKEN in your .env file or environment."
+        )
+        sys.exit(1)
+
+    bot = ScheduleBot(token=BOT_TOKEN)
+    logger.info("Starting SUITT Schedule Bot...")
+    asyncio.run(bot.run([main_router, commands_router, ai_router]))
+
 
 if __name__ == "__main__":
-    bot = ScheduleBot(token=BOT_TOKEN)
-    asyncio.run(bot.run([main_router, commands_router, ai_router]))
-# ебать
+    main()

@@ -1,5 +1,6 @@
 from schedulebot.singleton import Singleton
 
+
 class SessionController(metaclass=Singleton):
     def __init__(self):
         self.__session = {}
