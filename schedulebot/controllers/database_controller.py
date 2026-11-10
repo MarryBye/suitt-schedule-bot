@@ -4,13 +4,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from schedulebot.config import SQLITE_DBFILE
 from schedulebot.singleton import Singleton
 
 logger = logging.getLogger(__name__)
 
 
 class DatabaseController(metaclass=Singleton):
-    def __init__(self, db_name: str) -> None:
+    def __init__(self, db_name: str = SQLITE_DBFILE) -> None:
         self.db_name = db_name
         self.connection: sql.Connection | None = None
         self.cursor: sql.Cursor | None = None
