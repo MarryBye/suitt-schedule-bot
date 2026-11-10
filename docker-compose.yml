@@ -1,0 +1,17 @@
+services:
+  schedule-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: suitt-schedule-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SQLITE_DBFILE=/app/data/schedule.db
+    volumes:
+      - bot_data:/app/data
+
+volumes:
+  bot_data:
+    name: suitt_schedule_bot_data
