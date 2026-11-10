@@ -6,7 +6,8 @@ services:
     container_name: suitt-schedule-bot
     restart: unless-stopped
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
       - SQLITE_DBFILE=/app/data/schedule.db
     volumes:

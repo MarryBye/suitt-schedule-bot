@@ -3,6 +3,7 @@ import logging
 import sys
 
 from schedulebot.config import BOT_TOKEN
+from schedulebot.controllers.database_controller import DatabaseController
 from schedulebot.keyboards.show_schedule import KEYBOARD  # noqa: F401
 from schedulebot.routers.ai_router import router as ai_router
 from schedulebot.routers.commands_router import router as commands_router
@@ -24,9 +25,19 @@ def main() -> None:
         )
         sys.exit(1)
 
+    logger.info("Initializing database...")
+    db = DatabaseController()
+    db.connect()
+
     bot = ScheduleBot(token=BOT_TOKEN)
     logger.info("Starting SUITT Schedule Bot...")
-    asyncio.run(bot.run([main_router, commands_router, ai_router]))
+    try:
+        asyncio.run(bot.run([main_router, commands_router, ai_router]))
+    except Exception as e:
+        logger.warning(
+            "Telegram polling encountered an error (e.g. invalid mock token): %s",
+            e,
+        )
 
 
 if __name__ == "__main__":
